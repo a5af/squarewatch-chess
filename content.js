@@ -1,31 +1,15 @@
-// Check if the script has already been injected
-if (!document.getElementById('chess-overlay')) {
-  // Create overlay
+// Check if the overlay already exists to avoid duplicate overlays
+if (!document.getElementById('test-overlay')) {
+  // Create the overlay element
   const overlay = document.createElement('div');
-  overlay.id = 'chess-overlay';
-  overlay.style.position = 'absolute';
+  overlay.id = 'test-overlay';
+  overlay.style.position = 'fixed';
   overlay.style.top = 0;
   overlay.style.left = 0;
   overlay.style.width = '100%';
   overlay.style.height = '100%';
-  overlay.style.pointerEvents = 'none';
+  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // 50% translucent black
   overlay.style.zIndex = '1000';
+  overlay.style.pointerEvents = 'none'; // So it doesn’t interfere with clicks
   document.body.appendChild(overlay);
-
-  // Example function to shade squares based on a mock threat level
-  function shadeSquare(squareId, threatLevel) {
-    const square = document.querySelector(`[data-square="${squareId}"]`);
-    if (square) {
-      const shade = document.createElement('div');
-      shade.className = 'threat-shade';
-      shade.style.backgroundColor = `rgba(255, 0, 0, ${threatLevel * 0.1})`;
-      square.appendChild(shade);
-    }
-  }
-
-  // Example threat level data
-  const mockThreatLevels = { e4: 3, d4: 2, f4: 1 };
-  Object.entries(mockThreatLevels).forEach(([squareId, level]) =>
-    shadeSquare(squareId, level)
-  );
 }
