@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+// @ts-ignore
 import { createRoot } from 'react-dom/client';
-import './tailwind.css';
+// import './tailwind.css';
 
 const Overlay: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -19,8 +20,16 @@ const Overlay: React.FC = () => {
   );
 };
 
-// Mount the React component to a div appended to the body
-const rootDiv = document.createElement('div');
-document.body.appendChild(rootDiv);
-const root = createRoot(rootDiv);
-root.render(<Overlay />);
+// Function to render the overlay
+const showOverlay = () => {
+  console.log('Overlay displayed'); // Logs when the overlay is shown
+
+  const rootDiv = document.createElement('div');
+  document.body.appendChild(rootDiv);
+  const root = createRoot(rootDiv);
+  root.render(<Overlay />);
+};
+
+showOverlay(); // Call the function to display the overlay
+// Export the showOverlay function so it can be called from outside
+export default showOverlay;

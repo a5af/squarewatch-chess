@@ -1,4 +1,6 @@
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -25,4 +27,24 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimize: false,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: false, // Keep console logs
+          },
+        },
+      }),
+    ],
+  },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'manifest.json', to: 'manifest.json' },
+        { from: 'public/icons', to: 'icons' },
+      ],
+    }),
+  ],
 };

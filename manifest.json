@@ -11,8 +11,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.chess.com/*"],
-      "js": ["content.js"],
-      "css": ["overlay.css"]
+      "js": ["content.js"]
     }
   ],
   "icons": {
