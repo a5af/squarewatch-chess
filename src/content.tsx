@@ -9,11 +9,8 @@ const Overlay: React.FC = () => {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <button
-        onClick={() => setVisible(false)}
-        className="px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition"
-      >
+    <div>
+      <button onClick={() => setVisible(false)} className="">
         Close Overlay
       </button>
     </div>
@@ -31,5 +28,7 @@ const showOverlay = () => {
 };
 
 showOverlay(); // Call the function to display the overlay
+
+// showOverlay(); // Call the function to display the overlay
 // Export the showOverlay function so it can be called from outside
 export default showOverlay;

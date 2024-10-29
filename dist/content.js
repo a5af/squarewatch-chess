@@ -498,8 +498,8 @@ const Overlay = () => {
     const [visible, setVisible] = (0, react_1.useState)(true);
     if (!visible)
         return null;
-    return (react_1.default.createElement("div", { className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" },
-        react_1.default.createElement("button", { onClick: () => setVisible(false), className: "px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition" }, "Close Overlay")));
+    return (react_1.default.createElement("div", null,
+        react_1.default.createElement("button", { onClick: () => setVisible(false), className: "" }, "Close Overlay")));
 };
 // Function to render the overlay
 const showOverlay = () => {
@@ -510,6 +510,7 @@ const showOverlay = () => {
     root.render(react_1.default.createElement(Overlay, null));
 };
 showOverlay(); // Call the function to display the overlay
+// showOverlay(); // Call the function to display the overlay
 // Export the showOverlay function so it can be called from outside
 exports["default"] = showOverlay;
 
