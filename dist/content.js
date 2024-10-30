@@ -462,7 +462,40 @@ if (true) {
 
 /***/ }),
 
-/***/ 315:
+/***/ 37:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.detectPieces = void 0;
+const detectPieces = () => {
+    const board = document.getElementById('board-single');
+    const positions = [];
+    if (board) {
+        const pieces = board.querySelectorAll('.piece');
+        pieces.forEach((piece) => {
+            const pieceType = Array.from(piece.classList).find((cls) => cls.length === 2);
+            const positionClass = Array.from(piece.classList).find((cls) => cls.startsWith('square-'));
+            if (pieceType && positionClass) {
+                const square = positionClass.replace('square-', '');
+                const row = parseInt(square[0], 10);
+                const col = parseInt(square[1], 10);
+                positions.push({ type: pieceType, row, col });
+            }
+        });
+        console.log('Piece positions detected:', positions);
+    }
+    else {
+        console.error('Chess board not found');
+    }
+    return positions;
+};
+exports.detectPieces = detectPieces;
+
+
+/***/ }),
+
+/***/ 828:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -490,20 +523,32 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+// Overlay.tsx
 const react_1 = __importStar(__webpack_require__(540));
-// @ts-ignore
-const client_1 = __webpack_require__(338);
+const BoardDetection_1 = __webpack_require__(37);
 const Overlay = () => {
     var _a;
     const [visible, setVisible] = (0, react_1.useState)(true);
+    const [piecePositions, setPiecePositions] = (0, react_1.useState)([]);
+    (0, react_1.useEffect)(() => {
+        // Detect pieces and store positions on component mount
+        const positions = (0, BoardDetection_1.detectPieces)();
+        setPiecePositions(positions);
+    }, []);
     if (!visible) {
-        // Remove overlay and reset the active flag in storage
         (_a = document.getElementById('overlay-root')) === null || _a === void 0 ? void 0 : _a.remove();
         chrome.storage.local.set({ overlayActive: false });
         return null;
     }
     return (react_1.default.createElement("div", { style: overlayStyle },
-        react_1.default.createElement("button", { onClick: () => setVisible(false), style: buttonStyle }, "Close Overlay")));
+        react_1.default.createElement("button", { onClick: () => setVisible(false), style: buttonStyle }, "Close Overlay"),
+        react_1.default.createElement("div", null, piecePositions.map((piece, index) => (react_1.default.createElement("div", { key: index },
+            "Piece ",
+            piece.type,
+            " at Row ",
+            piece.row,
+            ", Column ",
+            piece.col))))));
 };
 // Inline styles for the overlay and button
 const overlayStyle = {
@@ -528,20 +573,35 @@ const buttonStyle = {
     cursor: 'pointer',
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
 };
-// Function to render the overlay
+exports["default"] = Overlay;
+
+
+/***/ }),
+
+/***/ 315:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+// context.tsx
+const react_1 = __importDefault(__webpack_require__(540));
+// @ts-ignore
+const client_1 = __webpack_require__(338);
+const Overlay_1 = __importDefault(__webpack_require__(828));
 const showOverlay = () => {
     console.log('Overlay displayed');
-    // Check if overlay already exists
     if (document.getElementById('overlay-root')) {
         console.log('Overlay already exists');
-        return; // Exit if overlay is already present
+        return;
     }
-    // Create root div with unique ID
     const rootDiv = document.createElement('div');
     rootDiv.id = 'overlay-root';
     document.body.appendChild(rootDiv);
     const root = (0, client_1.createRoot)(rootDiv);
-    root.render(react_1.default.createElement(Overlay, null));
+    root.render(react_1.default.createElement(Overlay_1.default, null));
 };
 // Check the overlayActive flag in chrome.storage and show overlay if true
 chrome.storage.local.get('overlayActive', (result) => {
