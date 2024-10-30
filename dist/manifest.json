@@ -3,7 +3,7 @@
   "name": "Chess Overlay Extension",
   "version": "1.0",
   "description": "Overlay showing threat levels on a chess board.",
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["storage", "scripting", "activeTab"],
   "host_permissions": ["https://www.chess.com/*"],
   "background": {
     "service_worker": "background.js"

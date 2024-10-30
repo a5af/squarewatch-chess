@@ -493,25 +493,62 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importStar(__webpack_require__(540));
 // @ts-ignore
 const client_1 = __webpack_require__(338);
-// import './tailwind.css';
 const Overlay = () => {
+    var _a;
     const [visible, setVisible] = (0, react_1.useState)(true);
-    if (!visible)
+    if (!visible) {
+        // Remove overlay and reset the active flag in storage
+        (_a = document.getElementById('overlay-root')) === null || _a === void 0 ? void 0 : _a.remove();
+        chrome.storage.local.set({ overlayActive: false });
         return null;
-    return (react_1.default.createElement("div", null,
-        react_1.default.createElement("button", { onClick: () => setVisible(false), className: "" }, "Close Overlay")));
+    }
+    return (react_1.default.createElement("div", { style: overlayStyle },
+        react_1.default.createElement("button", { onClick: () => setVisible(false), style: buttonStyle }, "Close Overlay")));
+};
+// Inline styles for the overlay and button
+const overlayStyle = {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+};
+const buttonStyle = {
+    padding: '20px 40px',
+    fontSize: '24px',
+    backgroundColor: '#ff6b6b',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
 };
 // Function to render the overlay
 const showOverlay = () => {
-    console.log('Overlay displayed'); // Logs when the overlay is shown
+    console.log('Overlay displayed');
+    // Check if overlay already exists
+    if (document.getElementById('overlay-root')) {
+        console.log('Overlay already exists');
+        return; // Exit if overlay is already present
+    }
+    // Create root div with unique ID
     const rootDiv = document.createElement('div');
+    rootDiv.id = 'overlay-root';
     document.body.appendChild(rootDiv);
     const root = (0, client_1.createRoot)(rootDiv);
     root.render(react_1.default.createElement(Overlay, null));
 };
-showOverlay(); // Call the function to display the overlay
-// showOverlay(); // Call the function to display the overlay
-// Export the showOverlay function so it can be called from outside
+// Check the overlayActive flag in chrome.storage and show overlay if true
+chrome.storage.local.get('overlayActive', (result) => {
+    if (result.overlayActive) {
+        showOverlay();
+    }
+});
 exports["default"] = showOverlay;
 
 
