@@ -467,7 +467,7 @@ if (true) {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.detectPieces = void 0;
+exports.calculateThreatLevels = exports.getAttackSquares = exports.detectPieces = void 0;
 const detectPieces = () => {
     const board = document.getElementById('board-single');
     const positions = [];
@@ -483,14 +483,109 @@ const detectPieces = () => {
                 positions.push({ type: pieceType, row, col });
             }
         });
-        console.log('Piece positions detected:', positions);
-    }
-    else {
-        console.error('Chess board not found');
     }
     return positions;
 };
 exports.detectPieces = detectPieces;
+// Helper to get possible attacks based on piece type and position
+const getAttackSquares = (piece, pieces) => {
+    const moves = [];
+    const { type, row, col } = piece;
+    const isSelf = type.startsWith('w'); // Assume 'w' means self, 'b' means enemy
+    const isBlocked = (r, c) => {
+        return pieces.some((p) => p.row === r && p.col === c);
+    };
+    const addMovesInLine = (deltaRow, deltaCol) => {
+        for (let i = 1; i < 8; i++) {
+            const targetRow = row + deltaRow * i;
+            const targetCol = col + deltaCol * i;
+            if (targetRow < 1 || targetRow > 8 || targetCol < 1 || targetCol > 8)
+                break;
+            moves.push({ row: targetRow, col: targetCol });
+            if (isBlocked(targetRow, targetCol))
+                break; // Stop if blocked
+        }
+    };
+    switch (type) {
+        case 'wp':
+            moves.push({ row: row + 1, col: col + 1 }, { row: row + 1, col: col - 1 });
+            break;
+        case 'bp':
+            moves.push({ row: row - 1, col: col + 1 }, { row: row - 1, col: col - 1 });
+            break;
+        case 'wr':
+        case 'br':
+            addMovesInLine(1, 0);
+            addMovesInLine(-1, 0);
+            addMovesInLine(0, 1);
+            addMovesInLine(0, -1);
+            break;
+        case 'wb':
+        case 'bb':
+            addMovesInLine(1, 1);
+            addMovesInLine(-1, -1);
+            addMovesInLine(1, -1);
+            addMovesInLine(-1, 1);
+            break;
+        case 'wq':
+        case 'bq':
+            addMovesInLine(1, 0);
+            addMovesInLine(-1, 0);
+            addMovesInLine(0, 1);
+            addMovesInLine(0, -1);
+            addMovesInLine(1, 1);
+            addMovesInLine(-1, -1);
+            addMovesInLine(1, -1);
+            addMovesInLine(-1, 1);
+            break;
+        case 'wk':
+        case 'bk':
+            [-1, 0, 1].forEach((dr) => [-1, 0, 1].forEach((dc) => {
+                if (dr || dc)
+                    moves.push({ row: row + dr, col: col + dc });
+            }));
+            break;
+        case 'wn':
+        case 'bn':
+            [
+                [2, 1],
+                [2, -1],
+                [-2, 1],
+                [-2, -1],
+                [1, 2],
+                [1, -2],
+                [-1, 2],
+                [-1, -2],
+            ].forEach(([dr, dc]) => {
+                moves.push({ row: row + dr, col: col + dc });
+            });
+            break;
+    }
+    return moves.filter(({ row, col }) => row >= 1 && row <= 8 && col >= 1 && col <= 8);
+};
+exports.getAttackSquares = getAttackSquares;
+// Compute the overall threat level for each square
+const calculateThreatLevels = (pieces) => {
+    const threatLevels = [];
+    pieces.forEach((piece) => {
+        const attackSquares = (0, exports.getAttackSquares)(piece, pieces);
+        attackSquares.forEach(({ row, col }) => {
+            let threatSquare = threatLevels.find((threat) => threat.row === row && threat.col === col);
+            if (!threatSquare) {
+                threatSquare = { row, col, selfCount: 0, enemyCount: 0 };
+                threatLevels.push(threatSquare);
+            }
+            if (piece.type.startsWith('w')) {
+                threatSquare.selfCount += 1;
+            }
+            else {
+                threatSquare.enemyCount += 1;
+            }
+        });
+    });
+    return threatLevels;
+};
+exports.calculateThreatLevels = calculateThreatLevels;
 
 
 /***/ }),
@@ -523,55 +618,108 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-// Overlay.tsx
 const react_1 = __importStar(__webpack_require__(540));
 const BoardDetection_1 = __webpack_require__(37);
 const Overlay = () => {
     var _a;
     const [visible, setVisible] = (0, react_1.useState)(true);
     const [piecePositions, setPiecePositions] = (0, react_1.useState)([]);
+    const canvasRef = (0, react_1.useRef)(null);
     (0, react_1.useEffect)(() => {
-        // Detect pieces and store positions on component mount
         const positions = (0, BoardDetection_1.detectPieces)();
         setPiecePositions(positions);
-    }, []);
+        const drawGrid = () => {
+            const canvas = canvasRef.current;
+            const board = document.getElementById('board-single');
+            if (canvas && board) {
+                const context = canvas.getContext('2d');
+                if (!context)
+                    return;
+                const { width, height, top, left } = board.getBoundingClientRect();
+                canvas.width = width;
+                canvas.height = height;
+                canvas.style.position = 'absolute';
+                canvas.style.top = `${top}px`;
+                canvas.style.left = `${left}px`;
+                const cellWidth = width / 8;
+                const cellHeight = height / 8;
+                context.clearRect(0, 0, width, height);
+                const threatLevels = (0, BoardDetection_1.calculateThreatLevels)(piecePositions);
+                threatLevels.forEach(({ row, col, selfCount, enemyCount }) => {
+                    let color = '';
+                    if (selfCount > 0 && enemyCount > 0) {
+                        color = `rgba(128, 0, 128, ${Math.min((selfCount + enemyCount) / 5, 1)})`; // Purple
+                    }
+                    else if (selfCount > 0) {
+                        color = `rgba(0, 0, 255, ${Math.min(selfCount / 5, 1)})`; // Blue
+                    }
+                    else if (enemyCount > 0) {
+                        color = `rgba(255, 0, 0, ${Math.min(enemyCount / 5, 1)})`; // Red
+                    }
+                    if (color) {
+                        context.fillStyle = color;
+                        context.fillRect((col - 1) * cellWidth, (8 - row) * cellHeight, cellWidth, cellHeight);
+                    }
+                });
+                // Draw grid outline
+                context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                context.lineWidth = 1;
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        context.strokeRect(c * cellWidth, r * cellHeight, cellWidth, cellHeight);
+                    }
+                }
+            }
+        };
+        drawGrid();
+        window.addEventListener('resize', drawGrid);
+        return () => window.removeEventListener('resize', drawGrid);
+    }, [piecePositions]);
+    const handleClose = () => {
+        setVisible(false);
+        try {
+            chrome.storage.local.set({ overlayActive: false });
+        }
+        catch (error) {
+            console.error('Error accessing chrome.storage.local:', error);
+        }
+    };
     if (!visible) {
         (_a = document.getElementById('overlay-root')) === null || _a === void 0 ? void 0 : _a.remove();
-        chrome.storage.local.set({ overlayActive: false });
         return null;
     }
-    return (react_1.default.createElement("div", { style: overlayStyle },
-        react_1.default.createElement("button", { onClick: () => setVisible(false), style: buttonStyle }, "Close Overlay"),
-        react_1.default.createElement("div", null, piecePositions.map((piece, index) => (react_1.default.createElement("div", { key: index },
-            "Piece ",
-            piece.type,
-            " at Row ",
-            piece.row,
-            ", Column ",
-            piece.col))))));
+    return (react_1.default.createElement("div", { style: overlayContainerStyle },
+        react_1.default.createElement("button", { onClick: handleClose, style: buttonStyle }, "Close Overlay"),
+        react_1.default.createElement("canvas", { ref: canvasRef, style: canvasStyle })));
 };
-// Inline styles for the overlay and button
-const overlayStyle = {
+// Inline styles for the overlay container and button
+const overlayContainerStyle = {
     position: 'fixed',
     top: '0',
     left: '0',
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    pointerEvents: 'none',
     zIndex: 1000,
 };
 const buttonStyle = {
-    padding: '20px 40px',
-    fontSize: '24px',
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    padding: '10px 20px',
+    fontSize: '16px',
     backgroundColor: '#ff6b6b',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
+    pointerEvents: 'auto',
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
+};
+const canvasStyle = {
+    position: 'absolute',
+    pointerEvents: 'none',
+    zIndex: 1001,
 };
 exports["default"] = Overlay;
 

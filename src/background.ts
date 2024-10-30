@@ -1,17 +1,31 @@
-// background.ts
+// background.js
 
 chrome.action.onClicked.addListener((tab) => {
-  console.log('Extension icon clicked');
+  // Check if the tab's URL includes "chess.com"
+  if (tab.url && tab.url.includes('chess.com')) {
+    // Get current overlayActive state
+    chrome.storage.local.get('overlayActive', (result) => {
+      const isActive = result.overlayActive || false;
 
-  if (tab.id !== undefined) {
-    // Non-null assertion operator `!` assures TypeScript that tab.id is defined
-    chrome.storage.local.set({ overlayActive: true }, () => {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id! },
-        files: ['content.js'],
+      // Toggle the overlayActive state
+      chrome.storage.local.set({ overlayActive: !isActive }, () => {
+        if (!isActive) {
+          // If turning on, inject content script to display overlay
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id! },
+            files: ['content.js'],
+          });
+        } else {
+          // Optionally, send a message to content.js to close the overlay
+          chrome.tabs.sendMessage(tab.id!, { action: 'closeOverlay' });
+        }
       });
     });
   } else {
-    console.error('Tab ID is undefined. Cannot inject the content script.');
+    // Display an alert if not on chess.com
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      func: () => alert('This extension only works on chess.com.'),
+    });
   }
 });

@@ -3,9 +3,10 @@
 
 // background.ts
 chrome.action.onClicked.addListener((tab) => {
-    console.log('Extension icon clicked');
-    if (tab.id !== undefined) {
-        // Non-null assertion operator `!` assures TypeScript that tab.id is defined
+    // Check if the tab's URL includes "chess.com"
+    console.log('Extension icon clicked', Date.now());
+    if (tab.url && tab.url.includes('chess.com')) {
+        // Set the overlay active and inject content script
         chrome.storage.local.set({ overlayActive: true }, () => {
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
@@ -14,7 +15,11 @@ chrome.action.onClicked.addListener((tab) => {
         });
     }
     else {
-        console.error('Tab ID is undefined. Cannot inject the content script.');
+        // Display an alert if not on chess.com
+        chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => alert('Chess Overlay Extension only works on chess.com.'),
+        });
     }
 });
 
