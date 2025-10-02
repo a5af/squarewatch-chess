@@ -214,6 +214,61 @@ The project uses GitHub Actions for continuous integration:
 - **Build verification** ensures extension compiles correctly
 - All checks must pass before merging PRs
 
+## Releasing
+
+### Creating a New Release
+
+This project uses automated releases via GitHub Actions. To create a new release:
+
+1. **Bump the version** using one of the following commands:
+   ```bash
+   npm run version:patch  # 0.1.0 -> 0.1.1 (bug fixes)
+   npm run version:minor  # 0.1.0 -> 0.2.0 (new features)
+   npm run version:major  # 0.1.0 -> 1.0.0 (breaking changes)
+   ```
+
+   **For beta releases**, manually create a tag with `-beta.X` suffix:
+   ```bash
+   git tag v0.1.0-beta.1
+   git push --tags
+   ```
+   This will automatically be marked as a pre-release on GitHub.
+
+   The version bump scripts will:
+   - Update version in both `package.json` and `manifest.json`
+   - Create a git commit
+   - Create a git tag (e.g., `v0.1.1`)
+
+2. **Push the tag to GitHub**:
+   ```bash
+   git push && git push --tags
+   ```
+
+3. **Automated process**:
+   - GitHub Actions automatically builds the extension
+   - Runs all tests
+   - Creates a GitHub release with changelog
+   - Attaches downloadable `.zip` file
+   - Release appears at: https://github.com/yourusername/chess-overlay-extension/releases
+
+4. **Chrome Web Store** (manual step for now):
+   - Download the `.zip` from the GitHub release
+   - Go to [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+   - Upload the `.zip` file
+   - Submit for review
+
+### Release Artifacts
+
+Each release includes:
+- **Source code** (automatically by GitHub)
+- **Extension package** (`chess-overlay-extension-vX.Y.Z.zip`) - ready for Chrome Web Store
+- **Changelog** - auto-generated from git commits
+- **Build artifacts** - retained for 90 days
+
+### Version History
+
+See the [Releases page](https://github.com/yourusername/chess-overlay-extension/releases) for complete version history and changelogs.
+
 ## License
 
 ISC License
