@@ -1,4 +1,5 @@
 import { PiecePosition } from './PiecePosition';
+
 interface SquareThreat {
   row: number;
   col: number;
@@ -6,7 +7,8 @@ interface SquareThreat {
   enemyCount: number; // Number of "enemy" pieces targeting this square
 }
 
-export const detectPieces = (): PiecePosition[] => {
+// Detect chess.com pieces
+const detectChessDotComPieces = (): PiecePosition[] => {
   const board = document.getElementById('board-single');
   const positions: PiecePosition[] = [];
 
@@ -33,6 +35,70 @@ export const detectPieces = (): PiecePosition[] => {
   return positions;
 };
 
+// Detect lichess.org pieces using chessground
+const detectLichessPieces = (): PiecePosition[] => {
+  const board = document.querySelector('.cg-wrap');
+  const positions: PiecePosition[] = [];
+
+  if (board) {
+    const pieces = board.querySelectorAll('piece');
+
+    pieces.forEach((piece) => {
+      // Lichess uses classes like 'white pawn' or 'black knight'
+      const classes = Array.from(piece.classList);
+      const color = classes.find((c) => c === 'white' || c === 'black');
+      const pieceType = classes.find((c) =>
+        ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'].includes(c)
+      );
+
+      // Get position from CSS transform or data attributes
+      const style = window.getComputedStyle(piece);
+      const transform = style.transform;
+
+      if (color && pieceType && transform && transform !== 'none') {
+        // Parse the transform matrix to get position
+        const matrix = transform.match(/matrix\(([^)]+)\)/)?.[1].split(', ');
+        if (matrix && matrix.length >= 6) {
+          const x = parseFloat(matrix[4]);
+          const y = parseFloat(matrix[5]);
+          const boardRect = board.getBoundingClientRect();
+          const cellWidth = boardRect.width / 8;
+          const cellHeight = boardRect.height / 8;
+
+          const col = Math.floor(x / cellWidth) + 1;
+          const row = 8 - Math.floor(y / cellHeight);
+
+          // Convert to chess.com style notation (wp, bn, etc.)
+          const colorCode = color === 'white' ? 'w' : 'b';
+          const pieceCode = pieceType[0]; // First letter
+          const type = colorCode + pieceCode;
+
+          if (row >= 1 && row <= 8 && col >= 1 && col <= 8) {
+            positions.push({ type, row, col });
+          }
+        }
+      }
+    });
+  }
+
+  return positions;
+};
+
+// Main detection function that works on both sites
+export const detectPieces = (): PiecePosition[] => {
+  // Try chess.com first
+  if (document.getElementById('board-single')) {
+    return detectChessDotComPieces();
+  }
+
+  // Try lichess
+  if (document.querySelector('.cg-wrap')) {
+    return detectLichessPieces();
+  }
+
+  return [];
+};
+
 // Helper to get possible attacks based on piece type and position
 export const getAttackSquares = (
   piece: PiecePosition,
@@ -40,8 +106,6 @@ export const getAttackSquares = (
 ): Array<{ row: number; col: number }> => {
   const moves: Array<{ row: number; col: number }> = [];
   const { type, row, col } = piece;
-
-  const isSelf = type.startsWith('w'); // Assume 'w' means self, 'b' means enemy
 
   const isBlocked = (r: number, c: number) => {
     return pieces.some((p) => p.row === r && p.col === c);

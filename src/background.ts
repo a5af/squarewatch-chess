@@ -1,8 +1,7 @@
-// background.js
-
+// background.ts
 chrome.action.onClicked.addListener((tab) => {
-  // Check if the tab's URL includes "chess.com"
-  if (tab.url && tab.url.includes('chess.com')) {
+  // Check if the tab's URL includes "chess.com" or "lichess.org"
+  if (tab.url && (tab.url.includes('chess.com') || tab.url.includes('lichess.org'))) {
     // Get current overlayActive state
     chrome.storage.local.get('overlayActive', (result) => {
       const isActive = result.overlayActive || false;
@@ -22,10 +21,10 @@ chrome.action.onClicked.addListener((tab) => {
       });
     });
   } else {
-    // Display an alert if not on chess.com
+    // Display an alert if not on chess.com or lichess.org
     chrome.scripting.executeScript({
       target: { tabId: tab.id! },
-      func: () => alert('This extension only works on chess.com.'),
+      func: () => alert('This extension only works on chess.com and lichess.org.'),
     });
   }
 });

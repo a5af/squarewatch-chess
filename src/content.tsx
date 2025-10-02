@@ -1,7 +1,4 @@
-// context.tsx
-import React from 'react';
-// @ts-ignore
-import { createRoot } from 'react-dom/client';
+import { render } from 'solid-js/web';
 import Overlay from './Overlay';
 
 const showOverlay = () => {
@@ -16,8 +13,7 @@ const showOverlay = () => {
   rootDiv.id = 'overlay-root';
   document.body.appendChild(rootDiv);
 
-  const root = createRoot(rootDiv);
-  root.render(<Overlay />);
+  render(() => <Overlay />, rootDiv);
 };
 
 // Check the overlayActive flag in chrome.storage and show overlay if true
