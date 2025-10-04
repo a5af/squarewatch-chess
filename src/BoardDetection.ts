@@ -1,3 +1,4 @@
+// SquareWatch - Chess board detection and threat calculation
 import { PiecePosition } from './PiecePosition';
 
 interface SquareThreat {

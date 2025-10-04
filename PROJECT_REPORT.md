@@ -1,8 +1,8 @@
-# Chess Overlay Extension - Migration Report
+# SquareWatch - Migration Report
 
 ## Executive Summary
 
-Successfully migrated the Chess Overlay Extension from **React + Webpack** to **SolidJS + Vite**, achieving:
+Successfully migrated SquareWatch from **React + Webpack** to **SolidJS + Vite**, achieving:
 - ✅ **~85% bundle size reduction** (React 40KB → SolidJS 7KB)
 - ✅ **10-100x faster builds** with Vite vs Webpack
 - ✅ **Dual platform support** (chess.com + lichess.org)

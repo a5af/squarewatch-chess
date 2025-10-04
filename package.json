@@ -1,7 +1,7 @@
 {
-  "name": "chess-overlay-extension",
+  "name": "squarewatch",
   "version": "0.1.0",
-  "description": "A Chrome extension with SolidJS and Vite for overlaying chess.com and lichess.org boards",
+  "description": "Real-time board control visualization for chess.com and lichess.org",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,3 +1,4 @@
+// SquareWatch - Main overlay component
 import { createSignal, createEffect, onCleanup, Show } from 'solid-js';
 import { detectPieces, calculateThreatLevels } from './BoardDetection';
 import type { PiecePosition } from './PiecePosition';
@@ -117,7 +118,7 @@ const Overlay = () => {
     <Show when={visible()}>
       <div style={overlayContainerStyle}>
         <button onClick={handleClose} style={buttonStyle}>
-          Close Overlay
+          Close SquareWatch
         </button>
         <canvas ref={canvasRef} style={canvasStyle}></canvas>
       </div>

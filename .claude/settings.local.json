@@ -1,13 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)",
-      "Bash(test:*)",
-      "Bash(npm install)",
-      "Bash(npm run test:run:*)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: add automated release workflow and version management\n\n- Add version-bump.js script to sync versions across package.json and manifest.json\n- Create GitHub Actions release workflow for automated releases\n- Add npm scripts for version bumping (patch/minor/major)\n- Update README with release process documentation\n- Add DEPLOYMENT_PLAN.md with strategy and implementation details\n- Set version to 0.1.0 for early beta\n\nThe release workflow automatically:\n- Runs tests before releasing\n- Builds the extension\n- Creates a .zip package ready for Chrome Web Store\n- Generates changelog from git commits\n- Creates GitHub release with downloadable artifacts\n- Marks beta/alpha/rc versions as pre-releases\n\nUsage:\n  npm run version:patch  # Bump patch version\n  npm run version:minor  # Bump minor version\n  npm run version:major  # Bump major version\n  git push --tags        # Trigger release workflow\nEOF\n)\")",
-      "Bash(git push:*)"
+      "Bash(cat:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

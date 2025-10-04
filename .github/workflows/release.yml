@@ -52,10 +52,10 @@ jobs:
       - name: Create distribution package
         run: |
           cd dist
-          zip -r ../chess-overlay-extension-v${{ steps.get_version.outputs.version }}.zip .
+          zip -r ../squarewatch-v${{ steps.get_version.outputs.version }}.zip .
           cd ..
           echo "Package created:"
-          ls -lh chess-overlay-extension-*.zip
+          ls -lh squarewatch-*.zip
 
       - name: Generate changelog
         id: changelog
@@ -79,7 +79,7 @@ jobs:
           echo "" >> CHANGELOG.md
           echo "## Installation" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          echo "1. Download \`chess-overlay-extension-v${{ steps.get_version.outputs.version }}.zip\`" >> CHANGELOG.md
+          echo "1. Download \`squarewatch-v${{ steps.get_version.outputs.version }}.zip\`" >> CHANGELOG.md
           echo "2. Extract the ZIP file" >> CHANGELOG.md
           echo "3. Open Chrome and go to \`chrome://extensions/\`" >> CHANGELOG.md
           echo "4. Enable **Developer mode**" >> CHANGELOG.md
@@ -97,7 +97,7 @@ jobs:
           name: Release ${{ steps.get_version.outputs.tag }}
           body_path: CHANGELOG.md
           files: |
-            chess-overlay-extension-v${{ steps.get_version.outputs.version }}.zip
+            squarewatch-v${{ steps.get_version.outputs.version }}.zip
           draft: false
           prerelease: ${{ contains(steps.get_version.outputs.version, 'beta') || contains(steps.get_version.outputs.version, 'alpha') || contains(steps.get_version.outputs.version, 'rc') }}
         env:
@@ -114,7 +114,7 @@ jobs:
         run: |
           echo "🎉 Release v${{ steps.get_version.outputs.version }} created successfully!"
           echo ""
-          echo "📦 Package: chess-overlay-extension-v${{ steps.get_version.outputs.version }}.zip"
+          echo "📦 Package: squarewatch-v${{ steps.get_version.outputs.version }}.zip"
           echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.get_version.outputs.tag }}"
           echo ""
           echo "Next steps:"
