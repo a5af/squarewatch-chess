@@ -1,4 +1,4 @@
-// background.ts
+// SquareWatch - Background service worker
 chrome.action.onClicked.addListener((tab) => {
   // Check if the tab's URL includes "chess.com" or "lichess.org"
   if (tab.url && (tab.url.includes('chess.com') || tab.url.includes('lichess.org'))) {

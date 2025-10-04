@@ -1,4 +1,4 @@
-# Testing & CI Integration Summary
+# SquareWatch - Testing & CI Integration Summary
 
 ## ✅ Completed Tasks
 

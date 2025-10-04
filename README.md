@@ -1,4 +1,4 @@
-# Chess Overlay Extension
+# SquareWatch
 
 A modern Chrome browser extension that provides **real-time visual threat analysis** for chess games on chess.com and lichess.org. Built with **SolidJS** and **Vite** for optimal performance.
 
@@ -24,8 +24,8 @@ A modern Chrome browser extension that provides **real-time visual threat analys
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/chess-overlay-extension.git
-   cd chess-overlay-extension
+   git clone https://github.com/yourusername/squarewatch.git
+   cd squarewatch
    ```
 
 2. **Install dependencies**
@@ -50,7 +50,7 @@ A modern Chrome browser extension that provides **real-time visual threat analys
 
 4. Select the `dist/` folder from the project directory
 
-5. The Chess Overlay Extension should now appear in your extensions list
+5. SquareWatch should now appear in your extensions list
 
 ### Verify Installation
 
@@ -112,7 +112,7 @@ Coverage reports are generated in the `coverage/` directory.
 ### Project Structure
 
 ```
-chess-overlay-extension/
+squarewatch/
 ├── src/
 │   ├── background.ts          # Service worker for extension
 │   ├── content.tsx            # Content script entry point
@@ -249,7 +249,7 @@ This project uses automated releases via GitHub Actions. To create a new release
    - Runs all tests
    - Creates a GitHub release with changelog
    - Attaches downloadable `.zip` file
-   - Release appears at: https://github.com/yourusername/chess-overlay-extension/releases
+   - Release appears at: https://github.com/yourusername/squarewatch/releases
 
 4. **Chrome Web Store** (manual step for now):
    - Download the `.zip` from the GitHub release
@@ -261,13 +261,13 @@ This project uses automated releases via GitHub Actions. To create a new release
 
 Each release includes:
 - **Source code** (automatically by GitHub)
-- **Extension package** (`chess-overlay-extension-vX.Y.Z.zip`) - ready for Chrome Web Store
+- **Extension package** (`squarewatch-vX.Y.Z.zip`) - ready for Chrome Web Store
 - **Changelog** - auto-generated from git commits
 - **Build artifacts** - retained for 90 days
 
 ### Version History
 
-See the [Releases page](https://github.com/yourusername/chess-overlay-extension/releases) for complete version history and changelogs.
+See the [Releases page](https://github.com/yourusername/squarewatch/releases) for complete version history and changelogs.
 
 ## License
 

@@ -1,4 +1,4 @@
-# Deployment Plan - Chess Overlay Extension
+# Deployment Plan - SquareWatch
 
 ## Current State
 
@@ -77,7 +77,7 @@
 1. Create `.github/workflows/release.yml`
    - Trigger: Git tags (`v*.*.*`)
    - Build extension
-   - Create .zip package (`chess-overlay-extension-v{version}.zip`)
+   - Create .zip package (`squarewatch-v{version}.zip`)
    - Generate changelog from commits
    - Create GitHub release with .zip attachment
 

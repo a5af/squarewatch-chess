@@ -1,8 +1,9 @@
+// SquareWatch - Content script entry point
 import { render } from 'solid-js/web';
 import Overlay from './Overlay';
 
 const showOverlay = () => {
-  console.log('Overlay displayed');
+  console.log('SquareWatch overlay displayed');
 
   if (document.getElementById('overlay-root')) {
     console.log('Overlay already exists');
