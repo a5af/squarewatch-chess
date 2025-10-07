@@ -38,6 +38,30 @@ A modern Chrome browser extension that provides **real-time visual threat analys
    npm run build
    ```
 
+## 📚 Documentation
+
+Project documentation is located in the `docs/` directory:
+
+- **[Deployment Plan](docs/DEPLOYMENT_PLAN.md)** - Deployment strategy
+- **[Project Report](docs/PROJECT_REPORT.md)** - Project overview
+- **[Testing Summary](docs/TESTING_SUMMARY.md)** - Test results
+
+See [docs/README.md](docs/README.md) for complete documentation index.
+
+## 🗂️ Temporary Files
+
+**DO NOT** create temp/ or _temp/ directories in this project.
+
+**Use the parent workspace temp directory:**
+```bash
+# From this project directory
+cd ../../../_temp/archive/<your-agent-id>
+```
+
+All temporary session files should be stored in the WebProjects root `_temp/` directory to maintain consistency across the workspace.
+
+**See:** `../../_docs/GUIDE_AGENT_STARTUP.md` for temp file naming conventions.
+
    The compiled extension will be in the `dist/` directory.
 
 ### Load into Chrome
