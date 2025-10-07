@@ -48,6 +48,23 @@ Project documentation is located in the `docs/` directory:
 
 See [docs/README.md](docs/README.md) for complete documentation index.
 
+## 🛠️ Scripts
+
+Project automation scripts are located in the `scripts/` directory.
+
+See [scripts/README.md](scripts/README.md) for scripts documentation.
+
+### Security Note
+
+The `scripts/` directory has a `.gitignore` that automatically prevents committing files containing:
+- "secret", "password", "credential" in filenames
+- API keys and tokens
+- Private keys and certificates
+
+Always use `.example` suffix for template files with placeholder values.
+
+**For workspace-level scripts, see:** `_scripts/` in the WebProjects root.
+
 ## 🗂️ Temporary Files
 
 **DO NOT** create temp/ or _temp/ directories in this project.
