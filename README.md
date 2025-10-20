@@ -63,7 +63,7 @@ The `scripts/` directory has a `.gitignore` that automatically prevents committi
 
 Always use `.example` suffix for template files with placeholder values.
 
-**For workspace-level scripts, see:** `_scripts/` in the WebProjects root.
+**For workspace-level scripts, see:** `_scripts/` in the /d/Code/shared-docs.
 
 ## 🗂️ Temporary Files
 
@@ -75,9 +75,9 @@ Always use `.example` suffix for template files with placeholder values.
 cd ../../../_temp/archive/<your-agent-id>
 ```
 
-All temporary session files should be stored in the WebProjects root `_temp/` directory to maintain consistency across the workspace.
+All temporary session files should be stored in the /d/Code/shared-docs `_temp/` directory to maintain consistency across the workspace.
 
-**See:** `../../_docs/GUIDE_AGENT_STARTUP.md` for temp file naming conventions.
+**See:** `/d/Code/shared-docs/_docs/` for temp file naming conventions.
 
    The compiled extension will be in the `dist/` directory.
 
